@@ -23,7 +23,7 @@
             },
             "from": {
               "kind": "DockerImage",
-              "name": "soconcar/phoenix-builder:latest"
+              "name": "chargio/phoenix-builder:1.3"
             }
           }
         ]

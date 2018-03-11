@@ -8,6 +8,17 @@ ENV ERLANG_VERSION ${ERLANG_VERSION}
 ENV ELIXIR_VERSION ${ELIXIR_VERSION}
 ENV NODE_VERSION ${NODE_VERSION}
 # ENV NPM_VERSION ${NPM_VERSION}
+# ENV LC_ALL en_US.UTF-8
+
+RUN set -x && yum update -y
+
+RUN yum reinstall glibc-common -y
+RUN localedef -i en_US -f UTF-8 en_US.UTF-8
+RUN locale -a
+
+ENV LANG en_US.utf8
+ENV LC_CTYPE en_US.utf8
+ENV LC_ALL=
 
 LABEL io.k8s.description="Platform for building and running a phoenix app" \
       io.k8s.display-name="build-phoenix" \
@@ -90,7 +101,14 @@ RUN set -x \
   && tar --strip-components 1 -xf node-v${NODE_VERSION}-linux-x64.tar.xz -C /usr/local \
   && rm -rf node-v${NODE_VERSION}-linux-x64.tar.xz
 
+# Install yarn
+RUN set -x \
+   && curl --silent --location https://dl.yarnpkg.com/rpm/yarn.repo | sudo tee /etc/yum.repos.d/yarn.repo \
+   && yum install yarn \
+   && yum clean all -y
+
 ENV LANG en_US.UTF-8
+ENV LC_ALL en_US.UTF-8 
 
 COPY ./s2i/bin/ /usr/libexec/s2i
 
