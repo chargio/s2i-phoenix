@@ -95,16 +95,11 @@ RUN set -x \
   && rm -rf elixir
 
 # Install node/npm
-RUN set -x \
-  && cd /opt/ \
-  && curl -LO https://nodejs.org/dist/v${NODE_VERSION}/node-v${NODE_VERSION}-linux-x64.tar.xz \
-  && tar --strip-components 1 -xf node-v${NODE_VERSION}-linux-x64.tar.xz -C /usr/local \
-  && rm -rf node-v${NODE_VERSION}-linux-x64.tar.xz
-
 # Install yarn
 RUN set -x \
-   && curl --silent --location https://dl.yarnpkg.com/rpm/yarn.repo | sudo tee /etc/yum.repos.d/yarn.repo \
-   && yum install yarn \
+   && curl -sL https://rpm.nodesource.com/setup_8.x | bash - \
+   && curl --silent --location https://dl.yarnpkg.com/rpm/yarn.repo | tee /etc/yum.repos.d/yarn.repo \
+   && yum install yarn -y \
    && yum clean all -y
 
 ENV LANG en_US.UTF-8
